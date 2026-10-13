@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Order Platform</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fffdf3;
+      color: #30352d;
+    }
+    header {
+      background: #f5ffdf;
+      padding: 22px 18px;
+      border-bottom: 1px solid #e8eddb;
+    }
+    header h1 { color: #80ad32; margin: 0 0 8px; }
+    main { max-width: 500px; margin: auto; padding: 18px; }
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 16px 0;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px #0000000c;
+    }
+    input {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: 1px solid #b6cf80;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 25px;
+      padding: 14px;
+      margin-top: 10px;
+      background: #c5e63a;
+      color: #26320c;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .secondary { background: #edf2e3; }
+    .muted { color: #70766c; font-size: 14px; }
+    #message { overflow-wrap: anywhere; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Order Platform</h1>
+    <div>আপনার অ্যাকাউন্ট ও অর্ডার পরিচালনা করুন</div>
+  </header>
+
+  <main>
+    <section class="card" id="authPanel">
+      <h2 id="formTitle">অ্যাকাউন্টে লগইন করুন</h2>
+      <p class="muted">ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।</p>
+
+      <form id="authForm">
+        <input id="email" type="email"
+          placeholder="আপনার ইমেইল" required autocomplete="email">
+        <input id="password" type="password"
+          placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)"
+          required minlength="6" autocomplete="current-password">
+        <button id="submitButton" type="submit">লগইন</button>
+      </form>
+
+      <button class="secondary" id="toggleMode" type="button">
+        নতুন অ্যাকাউন্ট তৈরি করুন
+      </button>
+      <p id="message" role="status"></p>
+    </section>
+
+    <section class="card" id="dashboard" hidden>
+      <h2>স্বাগতম!</h2>
+      <p>লগইন করা ইমেইল:</p>
+      <p id="userEmail"></p>
+      <p class="muted">
+        আপনার অর্ডার, ব্যালেন্স এবং বিশেষ অর্ডারের ফিচার
+        পরবর্তী ধাপে নিরাপদভাবে যুক্ত করা হবে।
+      </p>
+      <button id="logoutButton" type="button">লগআউট</button>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import {
+      getAuth, createUserWithEmailAndPassword,
+      signInWithEmailAndPassword, onAuthStateChanged,
+      signOut
+    } from
+      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDCOHeLR62R6JMs7ciYBkn0iXJ_GKUd6ZI",
+      authDomain: "my-order-platform.firebaseapp.com",
+      projectId: "my-order-platform",
+      storageBucket: "my-order-platform.firebasestorage.app",
+      messagingSenderId: "206803434955",
+      appId: "1:206803434955:web:e62de410950463342c8a4e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const $ = id => document.getElementById(id);
+    let registerMode = false;
+
+    $("toggleMode").addEventListener("click", () => {
+      registerMode = !registerMode;
+      $("formTitle").textContent = registerMode
+        ? "নতুন অ্যাকাউন্ট তৈরি করুন"
+        : "অ্যাকাউন্টে লগইন করুন";
+      $("submitButton").textContent = registerMode
+        ? "রেজিস্টার করুন" : "লগইন";
+      $("toggleMode").textContent = registerMode
+        ? "আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন"
+        : "নতুন অ্যাকাউন্ট তৈরি করুন";
+      $("password").autocomplete = registerMode
+        ? "new-password" : "current-password";
+      $("message").textContent = "";
+    });
+
+    $("authForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      $("submitButton").disabled = true;
+      $("message").textContent = "অপেক্ষা করুন...";
+
+      try {
+        const email = $("email").value.trim();
+        const password = $("password").value;
+
+        if (registerMode) {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+        $("message").textContent = "সফল হয়েছে!";
+      } catch (error) {
+        const messages = {
+          "auth/email-already-in-use": "এই ইমেইলে অ্যাকাউন্ট আছে। লগইন করুন।",
+          "auth/invalid-email": "সঠিক ইমেইল লিখুন।",
+          "auth/weak-password": "আরও শক্তিশালী পাসওয়ার্ড দিন।",
+          "auth/invalid-credential": "ইমেইল বা পাসওয়ার্ড সঠিক নয়।",
+          "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।"
+        };
+        $("message").textContent =
+          messages[error.code] || "সমস্যা হয়েছে: " + error.code;
+      } finally {
+        $("submitButton").disabled = false;
+      }
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        $("message").textContent = "লগআউট হয়েছে।";
+      } catch {
+        $("message").textContent = "লগআউট করা যায়নি। আবার চেষ্টা করুন।";
+      }
+    });
+
+    onAuthStateChanged(auth, user => {
+      $("authPanel").hidden = !!user;
+      $("dashboard").hidden = !user;
+      $("userEmail").textContent = user?.email || "";
+    });
+  </script>
+</body>
+</html>
