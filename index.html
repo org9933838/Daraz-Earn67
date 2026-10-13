@@ -2,179 +2,191 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Order Platform</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fffdf3;
-      color: #30352d;
-    }
-    header {
-      background: #f5ffdf;
-      padding: 22px 18px;
-      border-bottom: 1px solid #e8eddb;
-    }
-    header h1 { color: #80ad32; margin: 0 0 8px; }
-    main { max-width: 500px; margin: auto; padding: 18px; }
-    .card {
-      background: white;
-      padding: 20px;
-      margin: 16px 0;
-      border-radius: 16px;
-      box-shadow: 0 2px 12px #0000000c;
-    }
-    input {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin: 12px 0;
-      border: 1px solid #b6cf80;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 25px;
-      padding: 14px;
-      margin-top: 10px;
-      background: #c5e63a;
-      color: #26320c;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .secondary { background: #edf2e3; }
-    .muted { color: #70766c; font-size: 14px; }
-    #message { overflow-wrap: anywhere; }
-    [hidden] { display: none !important; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daraz Earn</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fffdf3;color:#333;font-family:Arial,sans-serif}
+header{background:#f5ffdf;padding:20px}
+header h1{margin:0;color:#83ad30}
+main{max-width:520px;margin:auto;padding:14px 16px 100px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:18px;box-shadow:0 2px 12px #0001}
+input{width:100%;padding:14px;margin:9px 0;border:1px solid #b6cf80;border-radius:10px;font-size:16px}
+button{border:0;border-radius:24px;padding:13px;background:#c5e63a;color:#28320d;font-size:16px;cursor:pointer}
+.primary{width:100%;margin-top:10px}
+.secondary{width:100%;background:#edf2e3;margin-top:10px}
+.muted{color:#777;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:8px}
+.stat{padding:12px 2px;background:#fbfdf5;border-radius:10px}
+.stat strong{display:block;color:#81ad30;font-size:19px;margin:8px 0}
+.banner{background:linear-gradient(120deg,#f4ffd5,#fff4d9);padding:22px;border-radius:16px}
+.banner h2{margin-top:0}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:#f4f9e9;padding:16px;border-radius:14px;min-height:85px}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;box-shadow:0 -2px 12px #0001;display:flex;justify-content:space-around;padding:10px 2px calc(10px + env(safe-area-inset-bottom));z-index:3}
+nav button{background:white;padding:5px 3px;border-radius:8px;font-size:12px;flex:1}
+nav button.active{color:#79a92a}
+.page{display:none}.page.active{display:block}
+[hidden]{display:none!important}
+#message{overflow-wrap:anywhere}
+</style>
 </head>
 <body>
-  <header>
-    <h1>My Order Platform</h1>
-    <div>আপনার অ্যাকাউন্ট ও অর্ডার পরিচালনা করুন</div>
-  </header>
+<header>
+  <h1>Daraz Earn</h1>
+  <div>আপনার বিশ্বস্ত অনলাইন টাস্ক প্ল্যাটফর্ম</div>
+</header>
 
-  <main>
-    <section class="card" id="authPanel">
-      <h2 id="formTitle">অ্যাকাউন্টে লগইন করুন</h2>
-      <p class="muted">ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।</p>
+<main>
+<section class="card" id="authPanel">
+  <h2 id="formTitle">অ্যাকাউন্টে লগইন করুন</h2>
+  <p class="muted">ইমেইল ও পাসওয়ার্ড ব্যবহার করুন।</p>
+  <form id="authForm">
+    <input id="email" type="email" placeholder="আপনার ইমেইল" required autocomplete="email">
+    <input id="password" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" required minlength="6" autocomplete="current-password">
+    <button class="primary" id="submitButton" type="submit">লগইন করুন</button>
+  </form>
+  <button class="secondary" id="toggleMode" type="button">নতুন অ্যাকাউন্ট তৈরি করুন</button>
+  <p id="message" role="status"></p>
+</section>
 
-      <form id="authForm">
-        <input id="email" type="email"
-          placeholder="আপনার ইমেইল" required autocomplete="email">
-        <input id="password" type="password"
-          placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)"
-          required minlength="6" autocomplete="current-password">
-        <button id="submitButton" type="submit">লগইন</button>
-      </form>
-
-      <button class="secondary" id="toggleMode" type="button">
-        নতুন অ্যাকাউন্ট তৈরি করুন
-      </button>
-      <p id="message" role="status"></p>
-    </section>
-
-    <section class="card" id="dashboard" hidden>
+<div id="app" hidden>
+  <section class="page active" id="homePage">
+    <div class="card">
       <h2>স্বাগতম!</h2>
-      <p>লগইন করা ইমেইল:</p>
-      <p id="userEmail"></p>
-      <p class="muted">
-        আপনার অর্ডার, ব্যালেন্স এবং বিশেষ অর্ডারের ফিচার
-        পরবর্তী ধাপে নিরাপদভাবে যুক্ত করা হবে।
-      </p>
-      <button id="logoutButton" type="button">লগআউট</button>
-    </section>
-  </main>
+      <p id="userEmail" class="muted"></p>
+      <div class="banner">
+        <h2>আপনার কাজ, আপনার অগ্রগতি</h2>
+        <p>আপনার নির্ধারিত টাস্ক ও অর্ডারের তথ্য এখানে দেখুন।</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="stats">
+        <div class="stat">বর্তমান ব্যালেন্স<strong>৳০.০০</strong></div>
+        <div class="stat">চলমান অর্ডার<strong>০</strong></div>
+        <div class="stat">সম্পন্ন টাস্ক<strong>০</strong></div>
+      </div>
+      <p class="muted">এগুলো প্রাথমিক প্রদর্শন। প্রকৃত হিসাব নিরাপদ ডেটাবেস যুক্ত করার পর দেখানো হবে।</p>
+    </div>
+    <div class="card">
+      <h3>কাজের বিভাগ</h3>
+      <div class="tiles">
+        <div class="tile">🛍️<br><b>সাধারণ টাস্ক</b></div>
+        <div class="tile">📦<br><b>আমার অর্ডার</b></div>
+        <div class="tile">⭐<br><b>বিশেষ টাস্ক</b></div>
+        <div class="tile">🎧<br><b>গ্রাহক সহায়তা</b></div>
+      </div>
+    </div>
+  </section>
 
-  <script type="module">
-    import { initializeApp } from
-      "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import {
-      getAuth, createUserWithEmailAndPassword,
-      signInWithEmailAndPassword, onAuthStateChanged,
-      signOut
-    } from
-      "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+  <section class="page" id="taskPage">
+    <div class="card">
+      <h2>টাস্ক</h2>
+      <p>এখানে আপনার জন্য বরাদ্দ করা টাস্ক দেখা যাবে।</p>
+      <p class="muted">টাস্ক ও পুরস্কারের প্রকৃত তথ্য অ্যাডমিনের নিরাপদ সেটিংস থেকে আসবে।</p>
+    </div>
+  </section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDCOHeLR62R6JMs7ciYBkn0iXJ_GKUd6ZI",
-      authDomain: "my-order-platform.firebaseapp.com",
-      projectId: "my-order-platform",
-      storageBucket: "my-order-platform.firebasestorage.app",
-      messagingSenderId: "206803434955",
-      appId: "1:206803434955:web:e62de410950463342c8a4e"
+  <section class="page" id="transactionPage">
+    <div class="card">
+      <h2>লেনদেন</h2>
+      <p>আপনার ব্যালেন্স ও লেনদেনের ইতিহাস এখানে দেখা যাবে।</p>
+      <p class="muted">প্রকৃত লেনদেনের তথ্য যুক্ত না হওয়া পর্যন্ত কোনো জমা বা উত্তোলন করা যাবে না।</p>
+    </div>
+  </section>
+
+  <section class="page" id="orderPage">
+    <div class="card">
+      <h2>আমার অর্ডার</h2>
+      <p>আপনার চলমান ও সম্পন্ন অর্ডার এখানে দেখা যাবে।</p>
+    </div>
+  </section>
+
+  <section class="page" id="accountPage">
+    <div class="card">
+      <h2>আমার অ্যাকাউন্ট</h2>
+      <p id="accountEmail"></p>
+      <button class="primary" id="logoutButton">লগআউট করুন</button>
+    </div>
+  </section>
+</div>
+</main>
+
+<nav id="bottomNav" hidden>
+  <button class="active" data-page="homePage">⌂<br>হোম</button>
+  <button data-page="taskPage">▤<br>টাস্ক</button>
+  <button data-page="transactionPage">⇄<br>লেনদেন</button>
+  <button data-page="orderPage">▣<br>অর্ডার</button>
+  <button data-page="accountPage">♙<br>আমার</button>
+</nav>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyDCOHeLR62R6JMs7ciYBkn0iXJ_GKUd6ZI",
+  authDomain:"my-order-platform.firebaseapp.com",
+  projectId:"my-order-platform",
+  storageBucket:"my-order-platform.firebasestorage.app",
+  messagingSenderId:"206803434955",
+  appId:"1:206803434955:web:e62de410950463342c8a4e"
+};
+const auth=getAuth(initializeApp(firebaseConfig));
+const $=id=>document.getElementById(id);
+let registerMode=false;
+
+$("toggleMode").onclick=()=>{
+  registerMode=!registerMode;
+  $("formTitle").textContent=registerMode?"নতুন অ্যাকাউন্ট তৈরি করুন":"অ্যাকাউন্টে লগইন করুন";
+  $("submitButton").textContent=registerMode?"রেজিস্টার করুন":"লগইন করুন";
+  $("toggleMode").textContent=registerMode?"আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন":"নতুন অ্যাকাউন্ট তৈরি করুন";
+  $("password").autocomplete=registerMode?"new-password":"current-password";
+  $("message").textContent="";
+};
+
+$("authForm").onsubmit=async e=>{
+  e.preventDefault();
+  $("submitButton").disabled=true;
+  $("message").textContent="অপেক্ষা করুন...";
+  try{
+    const email=$("email").value.trim();
+    const password=$("password").value;
+    if(registerMode) await createUserWithEmailAndPassword(auth,email,password);
+    else await signInWithEmailAndPassword(auth,email,password);
+    $("message").textContent="সফল হয়েছে!";
+  }catch(error){
+    const errors={
+      "auth/email-already-in-use":"এই ইমেইলে অ্যাকাউন্ট আছে। লগইন করুন।",
+      "auth/invalid-email":"সঠিক ইমেইল লিখুন।",
+      "auth/weak-password":"আরও শক্তিশালী পাসওয়ার্ড দিন।",
+      "auth/invalid-credential":"ইমেইল বা পাসওয়ার্ড সঠিক নয়.",
+      "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।"
     };
+    $("message").textContent=errors[error.code]||"সমস্যা হয়েছে: "+error.code;
+  }finally{$("submitButton").disabled=false;}
+};
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+$("logoutButton").onclick=()=>signOut(auth);
 
-    const $ = id => document.getElementById(id);
-    let registerMode = false;
+document.querySelectorAll("[data-page]").forEach(button=>{
+  button.onclick=()=>{
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    $(button.dataset.page).classList.add("active");
+    document.querySelectorAll("[data-page]").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    window.scrollTo(0,0);
+  };
+});
 
-    $("toggleMode").addEventListener("click", () => {
-      registerMode = !registerMode;
-      $("formTitle").textContent = registerMode
-        ? "নতুন অ্যাকাউন্ট তৈরি করুন"
-        : "অ্যাকাউন্টে লগইন করুন";
-      $("submitButton").textContent = registerMode
-        ? "রেজিস্টার করুন" : "লগইন";
-      $("toggleMode").textContent = registerMode
-        ? "আগে থেকেই অ্যাকাউন্ট আছে? লগইন করুন"
-        : "নতুন অ্যাকাউন্ট তৈরি করুন";
-      $("password").autocomplete = registerMode
-        ? "new-password" : "current-password";
-      $("message").textContent = "";
-    });
-
-    $("authForm").addEventListener("submit", async event => {
-      event.preventDefault();
-      $("submitButton").disabled = true;
-      $("message").textContent = "অপেক্ষা করুন...";
-
-      try {
-        const email = $("email").value.trim();
-        const password = $("password").value;
-
-        if (registerMode) {
-          await createUserWithEmailAndPassword(auth, email, password);
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-        }
-        $("message").textContent = "সফল হয়েছে!";
-      } catch (error) {
-        const messages = {
-          "auth/email-already-in-use": "এই ইমেইলে অ্যাকাউন্ট আছে। লগইন করুন।",
-          "auth/invalid-email": "সঠিক ইমেইল লিখুন।",
-          "auth/weak-password": "আরও শক্তিশালী পাসওয়ার্ড দিন।",
-          "auth/invalid-credential": "ইমেইল বা পাসওয়ার্ড সঠিক নয়।",
-          "auth/too-many-requests": "অনেকবার চেষ্টা হয়েছে। পরে আবার চেষ্টা করুন।"
-        };
-        $("message").textContent =
-          messages[error.code] || "সমস্যা হয়েছে: " + error.code;
-      } finally {
-        $("submitButton").disabled = false;
-      }
-    });
-
-    $("logoutButton").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        $("message").textContent = "লগআউট হয়েছে।";
-      } catch {
-        $("message").textContent = "লগআউট করা যায়নি। আবার চেষ্টা করুন।";
-      }
-    });
-
-    onAuthStateChanged(auth, user => {
-      $("authPanel").hidden = !!user;
-      $("dashboard").hidden = !user;
-      $("userEmail").textContent = user?.email || "";
-    });
-  </script>
+onAuthStateChanged(auth,user=>{
+  $("authPanel").hidden=!!user;
+  $("app").hidden=!user;
+  $("bottomNav").hidden=!user;
+  $("userEmail").textContent=user?"লগইন করা ইমেইল: "+user.email:"";
+  $("accountEmail").textContent=user?user.email:"";
+});
+</script>
 </body>
 </html>
